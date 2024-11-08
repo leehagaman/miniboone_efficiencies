@@ -1,0 +1,117 @@
+*) Simple build instructions are one level up, README.
+
+*) The main code is in: Nuance/Nuance/v{2,3}/src/main/nuance.f
+
+*)  Differential Cross Section code (in Nuance/Nuance/v2/src)  
+
+ * ELAS: neutrino-electron processes (nuelds.f)
+ * CCQE,NCQE: quasi-elastic (nuqeds.f and nuqeda.f))
+ * CCRS,NCRS: resonance mediated (nursds.f)
+ * CCDI,NCDI: deep inelastic (nudidd.f, nudids.f) 
+ * CCCO,NCCO: coherent (nucods.f and nucoxs.f) 
+ * CCDF,NCDF: diffractive (nucods.f) 
+
+*) Histograms in output CC cross section ntuple: (see nurahi.f) for
+ntuple definitions
+
+*) Reaction codes:
+   ----------------
+
+ 1  charged current, Cabibbo-allowed quasi-elastic scattering from nucleons
+   ... 1 CC numu n --> mu- p+ (or numubar p --> mu+ n)
+
+ 2  neutral current, (quasi-)elastic scattering from nucleons
+   ... 2 NC numu n --> numu n (or numubar n --> numubar n)
+         NC numu p --> numu p (or numubar p --> numubar p)
+
+ 3-16 resonant single pion production
+   ... 3 CC numu p+ --> mu- p+ pi+  <----
+   ... 4 CC numu n  --> mu- p+ pi0
+   ... 5 CC numu n  --> mu- n pi+
+   ... 6 NC numu p+ --> numu p+ pi0
+   ... 7 NC numu p+ --> numu n pi+
+   ... 8 NC numu n  --> numu n pi0
+   ... 9 NC numu n  --> numu p+ pi-
+   ... 10-16 corresponding antineutrino channels
+
+ 17-90 other resonant processes involving more than a single pion
+   ...17-38 Delta+pi
+      17 CC numu p+ --> mu- Delta+ pi+
+      18 CC numu p+ --> mu- Delta++ pi0
+      19 CC numu n  --> mu- Delta+ pi0
+      20 CC numu n  --> mu- Delta0 pi+
+      21 CC numu n  --> mu- Delta++ pi-
+      22 NC numu p+ --> numu Delta+ pi0
+      23 NC numu p+ --> numu Delta0 pi+
+      24 NC numu p+ --> numu Delta++ pi-
+      25 NC numu n  --> numu Delta+ pi-
+      26 NC numu n  --> numu Delta0 pi0
+      27 NC numu n  --> numu Delta- pi+
+
+   ...39-52 rho production
+      39 CC numu p+ --> mu- p+ rho+(770)
+      40 CC numu n  --> mu- p+ rho0(770)
+      41 CC numu n  --> mu- n rho+(770)
+      42 NC numu p+ --> numu p+ rho0(770)
+      43 NC numu p+ --> numu n rho+(770)
+      44 NC numu n  --> numu n rho0(770)
+      45 NC numu n  --> numu p+ rho-(770)
+      46-52 corresponding antineutrino channels
+
+   ...53-66 Sigma+K
+      53 CC numu p+ --> mu- Sigma+ K+
+      54 CC numu n  --> mu- Sigma0 K+
+      55 CC numu n  --> mu- Sigma+ K0
+      56 NC numu p+ --> numu Sigma0 K+
+      57 NC numu p+ --> numu Sigma+ K0
+      58 NC numu n  --> numu Sigma0 K0
+      58 NC numu n  --> numu Sigma- K+
+      59-66 corresponding antineutrino channels
+
+   ...67-72 eta production
+      67 CC numu n --> mu- p+ eta
+      68 NC numu p --> numu p eta
+      69 NC numu n --> numu n eta
+      70-72 corresponding antineutrino channels
+
+   ...73-78 Lambda+K
+      73 CC numu n  --> mu- K+ Lambda
+      74 NC numu p+ --> numu K+ Lambda
+      75 NC numu n  --> numu K0 Lambda
+      76-78 corresponding antineutrino channels
+
+   ...79-90 two pion production
+      79 CC numu n  --> mu- p+ pi+ pi-
+      80 CC numu n  --> mu- p+ pi0 pi0
+      81 NC numu p+ --> numu p+ pi+ pi-
+      82 NC numu p+ --> numu p+ pi0 pi0
+      83 NC numu n  --> numu n pi+ pi-
+      84 NC numu n  --> numu n pi0 pi0
+      85-90 corresponding antineutrino channels
+
+ 91 charged current deep inelastic scattering (nu or nubar)
+    ... 91 CC numu N --> mu- X (where N=n,p)
+
+ 92 neutral current deep inelastic scattering (nu or nubar)
+    ... 91 NC numu N --> numu X (where N=n,p)
+
+ 93 (v3 only) CC numu X --> mu- gamma gamma
+
+ 94 (v3 only) NC numu X --> numu gamma gamma
+
+ 95 charged current, Cabibbo-suppressed QE hyperon production from nucleons
+    ... 95 CC numubar p --> mu+ Lambda
+           CC numubar n --> mu+ Sigma-
+           CC numubar p --> mu+ Sigma0
+
+ 96 neutral current coherent or diffractive pi0 production
+   ... 96 NC numu A --> numu pi0 A
+
+ 97 charged current coherent or diffractive charged pi production
+   ... 97 CC numu A --> mu- pi+ A (or numubar A --> mu+ pi- A)
+
+ 98 neutrino + electron elastic scattering
+    ...98 numu e- --> numu e- (or numubar e- --> numubar e-)
+    
+ 99 neutrino + electron inverse muon decay
+   ... 99 CC numu e- --> mu- nue
