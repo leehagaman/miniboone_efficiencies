@@ -6,12 +6,12 @@
 #include <iostream>
 #include <cmath>
 
-namespace sp {
+namespace sp { 
 
   BkgdType_t CombinedFit_bkgd_type(const NuanceType_t evwt, const NuType_t inno) {
 
     BkgdType_t ibkgd = kBINVALID;
-
+    
     if ((inno == kNUMU) or (inno == kNUE)) {
       if (evwt == kCCQE) ibkgd = kBCCQE;
       else if (evwt == kCC1p1pi  or evwt == kCC1n1pi)  ibkgd = kBCCPIP;
@@ -26,7 +26,7 @@ namespace sp {
       else if (evwt == kNC1pi01a    or evwt == kCC1pi1a)     ibkgd = kBCHPI0;
       else if (evwt == kCC1pNg      or evwt == kNC1pNg)      ibkgd = kBDELTA;
     }
-
+    
     return ibkgd;
   }
 
@@ -51,7 +51,7 @@ namespace sp {
     double Mm = 0.105658389;
     double Mp = 0.93827231;
     double Mn = 0.93956563;
-
+    
     double Ml;
     if (lepton_type == kNUE or lepton_type == kNUEBAR)
       Ml = Me;
@@ -61,7 +61,7 @@ namespace sp {
       std::cerr << "Unknown lepton type" << std::endl;
       throw std::exception();
     }
-
+    
     double Etot  = (evis_MeV/1000.) + Ml;
     double EnuQE = 0.5*(2.*Mn*Etot + Mp*Mp - Mn*Mn - Ml*Ml) / (Mn - Etot + costheta*std::sqrt(Etot*Etot - Ml*Ml));
 
@@ -69,7 +69,7 @@ namespace sp {
   }
 
   double CombinedFit_Q2_ryan(const double evis_MeV, const double costheta, const NuType_t lepton_type) {
-
+    
     double Me = 0.00051099906;
     double Mm = 0.105658389;
     double Mp = 0.93827231;
@@ -88,7 +88,7 @@ namespace sp {
     double Etot  = (evis_MeV/1000.) + Ml;
     double EnuQE = 0.5*(2.*Mn*Etot + Mp*Mp - Mn*Mn - Ml*Ml) / (Mn - Etot + costheta*std::sqrt(Etot*Etot - Ml*Ml));
     double Q2 = 2.0*EnuQE*Etot*(1.0-costheta);
-
+    
     return Q2;
   }
 
@@ -109,9 +109,9 @@ namespace sp {
 		      std::vector<float>& pgam_t,
 		      std::vector<float>& vtx) {
 
-
+    
     // returns Event_num_pi0s
-
+    
     // nfsp = number of final state particles
     // ipfs = final state geant3 ID
     // vrtx = vertex XYZ of each final state particle
@@ -121,11 +121,11 @@ namespace sp {
     // pgram = Event momentum of each gamma?
     // vtx = Pi0 decay point?
     // pg = 4 momentum of gamma?
-
+    
     bool ld[127];
     unsigned nnpi0;
     GEANT3Type_t it, it2;
-
+    
     float vrtx[3][127];
     float pfsp[4][127];
     float pgam[4][2];
@@ -140,7 +140,7 @@ namespace sp {
       pfsp[2][i] = pfsp_z[i];
       pfsp[3][i] = pfsp_t[i];
     }
-
+    
     unsigned ng;
     unsigned mg;
     float pg[4][127];
@@ -161,40 +161,40 @@ namespace sp {
     for(unsigned i = 0; i < nfsp; ++i) {
       it = (GEANT3Type_t)ipfs[i];
       if (it == kPION0) {
-        npi0 = npi0 + 1;
-        for(unsigned j = 0; j<3; ++j){
-        vtx[j] = vrtx[j][i];
-        }
+	npi0 = npi0 + 1;
+	for(unsigned j = 0; j<3; ++j){
+	  vtx[j] = vrtx[j][i];
+	}
       }
-
+      
       if (it == kGAMMA) {
-        ng = ng + 1;
-        ld[ng] = false;
-        pg[3][ng] = pfsp[3][i]; // store this gamma energy
+	ng = ng + 1;
+	ld[ng] = false;
+	pg[3][ng] = pfsp[3][i]; // store this gamma energy
 
-        for(unsigned j=0; j<3; ++j) {
-          pg[j][ng] = pg[3][ng] * pfsp[j][i]; // store the gamma vertex
-        }
-
-        if(pg[3][ng] > 0.025) mg = mg + 1; // if above certain threshold increment mg (?)
+	for(unsigned j=0; j<3; ++j) {
+	  pg[j][ng] = pg[3][ng] * pfsp[j][i]; // store the gamma vertex
+	}
+	
+	if(pg[3][ng] > 0.025) mg = mg + 1; // if above certain threshold increment mg (?)
       }
 
       if (it == kPOSITRON or it == kELECTRON) {
-        for(unsigned j = i+1; j < nfsp; ++j) {
-          it2 = (GEANT3Type_t)ipfs[j];
-          if ((it2 == kPOSITRON or it2 == kELECTRON) and it != it2) {
-            // one if positron, one is electron, its a gamma?
-            ng = ng + 1;
-            ld[ng] = true;
-            pg[3][ng] = std::sqrt(pfsp[3][i]*pfsp[3][i] + me*me) + std::sqrt(pfsp[3][j]*pfsp[3][j] + me*me);
-            for(unsigned k=0; k<3; ++k) {
-            pg[k][ng] = pfsp[3][i]*pfsp[k][i] + pfsp[3][j]*pfsp[k][j];
-            }
-            if(pg[3][ng] > 0.025) mg = mg + 1;
-          }
-        }
+	for(unsigned j = i+1; j < nfsp; ++j) {
+	  it2 = (GEANT3Type_t)ipfs[j];
+	  if ((it2 == kPOSITRON or it2 == kELECTRON) and it != it2) {
+	    // one if positron, one is electron, its a gamma?
+	    ng = ng + 1;
+	    ld[ng] = true;
+	    pg[3][ng] = std::sqrt(pfsp[3][i]*pfsp[3][i] + me*me) + std::sqrt(pfsp[3][j]*pfsp[3][j] + me*me);
+	    for(unsigned k=0; k<3; ++k) {
+	      pg[k][ng] = pfsp[3][i]*pfsp[k][i] + pfsp[3][j]*pfsp[k][j];
+	    }
+	    if(pg[3][ng] > 0.025) mg = mg + 1;
+	  } 
+	}
       }
-
+      
     } // end loop over final state particle
 
     nnpi0 = 0;
@@ -202,37 +202,37 @@ namespace sp {
     for(unsigned i=0; i < ng; ++i) {
       for(unsigned j=i+1; j < ng; ++j) {
 
-        // m = sqrt((E1+E2)^2 - (p)^2)
+	// m = sqrt((E1+E2)^2 - (p)^2)
+	
+	mtemp = std::sqrt(std::pow(pg[3][i]+pg[3][j],2) - std::pow(pg[0][i]+pg[0][j],2) -
+			  std::pow(pg[1][i]+pg[1][j],2) - std::pow(pg[2][i]+pg[2][j],2));
+	  
+	  if(std::abs(mtemp - mpi0) < 0.000001) {
+	    
+            nnpi0 = nnpi0 + 1;
 
-        mtemp = std::sqrt(std::pow(pg[3][i]+pg[3][j],2) - std::pow(pg[0][i]+pg[0][j],2) -
-              std::pow(pg[1][i]+pg[1][j],2) - std::pow(pg[2][i]+pg[2][j],2));
-
-        if(std::abs(mtemp - mpi0) < 0.000001) {
-
-          nnpi0 = nnpi0 + 1;
-
-          if(nnpi0 == 1 or (ppi[3] < (pg[3][i] + pg[3][j]))) {
-            for(unsigned k=0; k<4; ++k) {
-              ppi[k] = pg[k][i] + pg[k][j];
-            }
-
-            if (ld[i] or  ld[j]) {
-              ldalitz = 1;
-            }
-
-            if (pg[3][i] > pg[3][j]) {
-              for(unsigned k=0; k<4; ++k) {
-                pgam[k][0] = pg[k][i];
-                pgam[k][1] = pg[k][j];
-              }
-            } else {
-              for(unsigned k=0; k<4; ++k) {
-                pgam[k][0] = pg[k][j];
-                pgam[k][1] = pg[k][i];
-              }
-            }
-          }
-        } // if pizero mass is satisfied
+	    if(nnpi0 == 1 or (ppi[3] < (pg[3][i] + pg[3][j]))) {
+	      for(unsigned k=0; k<4; ++k) {
+		ppi[k] = pg[k][i] + pg[k][j];
+	      }
+		
+	      if (ld[i] or  ld[j]) {
+		ldalitz = 1;
+	      }
+		
+	      if (pg[3][i] > pg[3][j]) {
+		for(unsigned k=0; k<4; ++k) {
+		  pgam[k][0] = pg[k][i];
+		  pgam[k][1] = pg[k][j];
+		}
+	      } else {
+		for(unsigned k=0; k<4; ++k) {
+		  pgam[k][0] = pg[k][j];
+		  pgam[k][1] = pg[k][i];
+		}
+	      }
+	    }
+	  } // if pizero mass is satisfied
       } // end that gamma
     } // end this gamma
 
@@ -241,10 +241,10 @@ namespace sp {
       pgam_y[i] = pgam[1][i];
       pgam_z[i] = pgam[2][i];
       pgam_t[i] = pgam[3][i];
-    }
+    }      
 
     npi0 = std::max(npi0,nnpi0);
-
+    
     return npi0;
   }
 
@@ -265,7 +265,7 @@ namespace sp {
     static std::vector<float> pgam_z(2,0);
     static std::vector<float> pgam_t(2,0);
     static std::vector<float> vtx(3,0);
-
+    
     return Pi0Details(nfsp,
   		      ipfs,
   		      vrtx_x,vrtx_y,vrtx_z,
@@ -277,7 +277,7 @@ namespace sp {
   }
 
 
-
+  
 
   StackedBkgdType_t StackHistoBkgd(const bool Event_is_dirt, // tuple var 11
 				   const bool Event_is_pi0,  // tuple var 10
@@ -287,25 +287,25 @@ namespace sp {
 
   {
     StackedBkgdType_t bkg = kBKGD_INVALID;
-
+    
     if      (Event_is_dirt) return kBKGD_DIRT;
     else if (Event_is_pi0)  return kBKGD_PI0;
     else if (evwt == kCC1pNg or evwt == kNC1pNg) return kBKGD_DELTA;
     else if ((parent_id == kPIONP or parent_id == kPIONM or parent_id == kMUONP or parent_id == kMUONM)
 	     and
 	     (nutype == kNUE or nutype== kNUEBAR)) return kBKGD_NUEPIP;
-
+    
     else if ((parent_id == kKAONP or parent_id == kKAONM)
 	     and
 	     (nutype == kNUE or nutype== kNUEBAR)) return kBKGD_NUEKP;
-
+  
     else if (parent_id == kKAON0LONG and (nutype == kNUE or nutype== kNUEBAR)) return kBKGD_NUEK0;
-
+  
     else return kBKGD_OTHER;
-
+    
     return bkg;
   }
-
+  
 
 
   float StackedHistoBkdgWeight( const bool Event_is_dirt,   // tuple var 11
@@ -316,22 +316,22 @@ namespace sp {
 				const float in_weight,
 				const float Npi,
 				const float Nka,
-				const float Nbkg)
+				const float Nbkg) 
   {
     float out_weight = in_weight;
-
+    
     //out_weight *= FLUX_WEIGHT(INU_COCKT) * Nbkg;
 
     if (!(Event_is_pi0 or Event_is_dirt or evwt == kNC1pNg)) {
 
       if (parent_id == kPIONP) out_weight *= Npi;
       if (parent_id == kKAONP) out_weight *= Nka;
-
+	  
     }
 
     return out_weight;
   }
-
+  
 
 }
 
